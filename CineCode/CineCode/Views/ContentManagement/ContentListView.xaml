@@ -1,0 +1,355 @@
+﻿<UserControl
+    x:Class="CineCode.Views.ContentManagement.ContentListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="560"
+    d:DesignWidth="1000"
+    FontFamily="/Fonts/#Pretendard"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+
+        <!-- 카드 스타일 -->
+        <Style x:Key="ListCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="BorderBrush" Value="#E6E1F0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="18"
+                        Opacity="0.08"
+                        ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 기본 버튼 -->
+        <Style x:Key="ListOutlineButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="MinWidth" Value="96" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#6D5DF6" />
+            <Setter Property="BorderBrush" Value="#6D5DF6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="13">
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F0EDFF" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E4DFFF" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F0EEF5" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#E1DDEB" />
+                                <Setter Property="Foreground" Value="#AAA4B5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 삭제 버튼 -->
+        <Style
+            x:Key="ListDangerButtonStyle"
+            BasedOn="{StaticResource ListOutlineButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Foreground" Value="#D9365B" />
+            <Setter Property="BorderBrush" Value="#D9365B" />
+        </Style>
+
+        <!-- DataGrid 전체 스타일 -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="HorizontalGridLinesBrush" Value="#ECE8F3" />
+            <Setter Property="RowHeight" Value="82" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserDeleteRows" Value="False" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#1E192D" />
+            <Setter Property="SelectionMode" Value="Extended" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+        </Style>
+
+        <!-- Header 중앙 정렬 -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Height" Value="58" />
+            <Setter Property="Background" Value="#F4F1FA" />
+            <Setter Property="Foreground" Value="#1E192D" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="4,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#ECE8F3" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock
+                    Text="{Binding}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    TextTrimming="None"
+                    VerticalAlignment="Center" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 셀 기본 스타일 -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="6,0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <!-- 가운데 정렬 셀 -->
+        <Style x:Key="CenterCellTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+
+        <!-- 왼쪽 정렬 셀 -->
+        <Style x:Key="LeftCellTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <!-- Overview 미리보기 -->
+        <Style x:Key="OverviewCellTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#5F5870" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <!-- 수정용 TextBox 스타일 -->
+        <Style x:Key="EditingTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#6D5DF6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#FAF9FF" />
+        </Style>
+
+        <!-- Overview 수정용 TextBox -->
+        <Style x:Key="EditingOverviewTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="BorderBrush" Value="#6D5DF6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#FAF9FF" />
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <Border Style="{StaticResource ListCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="14" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- 상단 정보 / 버튼 -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="110" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="#1E192D"
+                            Text="콘텐츠 목록" />
+
+                        <TextBlock
+                            x:Name="TotalContentCountText"
+                            Margin="0,5,0,0"
+                            FontSize="13"
+                            Foreground="#777184"
+                            Text="총 0개 항목" />
+                    </StackPanel>
+
+                    <!-- 수정 적용 버튼 -->
+                    <Button
+                        x:Name="EditContentButton"
+                        Grid.Column="1"
+                        Content="수정 적용"
+                        Style="{StaticResource ListOutlineButtonStyle}"
+                        PreviewMouseDown="EditContentButton_PreviewMouseDown"
+                        Click="EditContentButton_Click" />
+
+                    <!-- 삭제 버튼 -->
+                    <Button
+                        x:Name="DeleteContentButton"
+                        Grid.Column="3"
+                        Content="삭제"
+                        Style="{StaticResource ListDangerButtonStyle}"
+                        Click="DeleteContentButton_Click" />
+                </Grid>
+
+                <!-- DataGrid -->
+                <DataGrid
+                    x:Name="ContentDataGrid"
+                    Grid.Row="2"
+                    BeginningEdit="ContentDataGrid_BeginningEdit"
+                    CellEditEnding="ContentDataGrid_CellEditEnding"                    
+                    SelectionChanged="ContentDataGrid_SelectionChanged">
+
+                    <DataGrid.Columns>
+
+                        <!-- Poster 이미지: 수정 불가 -->
+                        <DataGridTemplateColumn Header="Poster" Width="86" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Width="50"
+                                        Height="68"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="#EEEAF5"
+                                        ClipToBounds="True"
+                                        CornerRadius="8">
+                                        <Image
+                                            Source="{Binding PosterUrl}"
+                                            Stretch="UniformToFill" />
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Content ID: 수정 불가 -->
+                        <DataGridTextColumn
+                            Header="ID"
+                            Binding="{Binding ContentID}"
+                            Width="70"
+                            IsReadOnly="True"
+                            ElementStyle="{StaticResource CenterCellTextStyle}" />
+
+                        <!-- Title: 수정 가능 -->
+                        <DataGridTextColumn
+                            Header="Title"
+                            Binding="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="180"
+                            ElementStyle="{StaticResource LeftCellTextStyle}"
+                            EditingElementStyle="{StaticResource EditingTextBoxStyle}" />
+
+                        <!-- Type: 수정 불가 -->
+                        <DataGridTextColumn
+                            Header="Type"
+                            Binding="{Binding Type}"
+                            Width="80"
+                            IsReadOnly="True"
+                            ElementStyle="{StaticResource CenterCellTextStyle}" />
+
+                        <!-- Release Date: 수정 가능 -->
+                        <DataGridTextColumn
+                            Header="Release"
+                            Binding="{Binding ReleaseDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="110"
+                            ElementStyle="{StaticResource CenterCellTextStyle}"
+                            EditingElementStyle="{StaticResource EditingTextBoxStyle}" />
+
+                        <!-- Running Time: 수정 가능 -->
+                        <DataGridTextColumn
+                            Header="Running"
+                            Binding="{Binding RunningTimeEditText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="95"
+                            ElementStyle="{StaticResource CenterCellTextStyle}"
+                            EditingElementStyle="{StaticResource EditingTextBoxStyle}" />
+
+                        <!-- TMDB Score: 수정 불가 -->
+                        <DataGridTextColumn
+                            Header="Score"
+                            Binding="{Binding TmdbScore}"
+                            Width="80"
+                            IsReadOnly="True"
+                            ElementStyle="{StaticResource CenterCellTextStyle}" />
+
+                        <!-- Age Rating: 수정 불가 -->
+                        <DataGridTextColumn
+                            Header="Age"
+                            Binding="{Binding AgeRating}"
+                            Width="80"
+                            IsReadOnly="True"
+                            ElementStyle="{StaticResource CenterCellTextStyle}" />
+
+                        <!-- OTT Count: 수정 불가 -->
+                        <DataGridTextColumn
+                            Header="OTT"
+                            Binding="{Binding OttCount}"
+                            Width="70"
+                            IsReadOnly="True"
+                            ElementStyle="{StaticResource CenterCellTextStyle}" />
+
+                        <!-- Poster URL: 수정 가능 -->
+                        <DataGridTextColumn
+                            Header="Poster URL"
+                            Binding="{Binding PosterUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="180"
+                            ElementStyle="{StaticResource LeftCellTextStyle}"
+                            EditingElementStyle="{StaticResource EditingTextBoxStyle}" />
+
+                        <!-- Overview: 수정 가능 -->
+                        <DataGridTextColumn
+                            Header="Overview"
+                            Binding="{Binding Overview, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="*"
+                            MinWidth="240"
+                            ElementStyle="{StaticResource OverviewCellTextStyle}"
+                            EditingElementStyle="{StaticResource EditingOverviewTextBoxStyle}" />
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

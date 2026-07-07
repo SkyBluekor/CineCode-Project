@@ -1,0 +1,279 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>    
+</PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Model\쓰유\**" />
+    <EmbeddedResource Remove="Model\쓰유\**" />
+    <None Remove="Model\쓰유\**" />
+    <Page Remove="Model\쓰유\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Fonts\Pretendard-Bold.otf" />
+    <None Remove="Fonts\Pretendard-Medium.otf" />
+    <None Remove="Fonts\Pretendard-Regular.otf" />
+    <None Remove="Images\CineCodeIcon.png" />
+    <None Remove="Images\CineCodeText.png" />
+    <None Remove="Images\CineCodeText_sidebar_compact.png" />
+    <None Remove="Images\CineCodeText_sidebar_wide.png" />
+    <None Remove="Images\ContentMappingIcon\MissingMapping.png" />
+    <None Remove="Images\ContentMappingIcon\MissingMapping1.png" />
+    <None Remove="Images\ContentMappingIcon\TotalGenre.png" />
+    <None Remove="Images\ContentMappingIcon\TotalGenre1.png" />
+    <None Remove="Images\ContentMappingIcon\TotalOTTProvider.png" />
+    <None Remove="Images\ContentMappingIcon\TotalOTTProvider1.png" />
+    <None Remove="Images\DashBoardIcon\ActiveSubscription.png" />
+    <None Remove="Images\DashBoardIcon\AddContent.png" />
+    <None Remove="Images\DashBoardIcon\AddUser.png" />
+    <None Remove="Images\DashBoardIcon\ExpiringSoon.png" />
+    <None Remove="Images\DashBoardIcon\ExportCSV.png" />
+    <None Remove="Images\DashBoardIcon\Link_GenreOTT.png" />
+    <None Remove="Images\DashBoardIcon\Link_GenreOTT1.png" />
+    <None Remove="Images\DashBoardIcon\MissingGenreLinks.png" />
+    <None Remove="Images\DashBoardIcon\MissingOttLinks.png" />
+    <None Remove="Images\DashBoardIcon\TotalContent.png" />
+    <None Remove="Images\DashBoardIcon\TotalOttProvider.png" />
+    <None Remove="Images\DashBoardIcon\TotalUser.png" />
+    <None Remove="Images\OTTicon\Amazon Prime Video.png" />
+    <None Remove="Images\OTTicon\Apple TV+.png" />
+    <None Remove="Images\OTTicon\Disney+.png" />
+    <None Remove="Images\OTTicon\Max.png" />
+    <None Remove="Images\OTTicon\Netflix.png" />
+    <None Remove="Images\OTTicon\Paramount Plus.png" />
+    <None Remove="Images\OTTicon\Peacock.png" />
+    <None Remove="Images\OTTicon\TVING.png" />
+    <None Remove="Images\OTTicon\watcha.png" />
+    <None Remove="Images\OTTicon\wavve.png" />
+    <None Remove="Images\SidebarIcon\Content_Management.png" />
+    <None Remove="Images\SidebarIcon\DashBoard.png" />
+    <None Remove="Images\SidebarIcon\DashBoard1.png" />
+    <None Remove="Images\SidebarIcon\Genre_OTT_LInk.png" />
+    <None Remove="Images\SidebarIcon\Members.png" />
+    <None Remove="Images\SidebarIcon\Rating.png" />
+    <None Remove="Images\SidebarIcon\Settings.png" />
+    <None Remove="Images\SidebarIcon\Statistics.png" />
+    <None Remove="Images\SidebarIcon\Subscriptions.png" />
+    <None Remove="Images\SidebarIcon\Watch_History.png" />
+    <None Remove="Images\StatisticsIcon\StatisticsActiveSub.png" />
+    <None Remove="Images\StatisticsIcon\StatisticsAvgScore.png" />
+    <None Remove="Images\StatisticsIcon\StatisticsTotalUser.png" />
+    <None Remove="Images\StatisticsIcon\StatisticsTotalWatchTIme.png" />
+    <None Remove="Images\SubscriptionIcon\Expired.png" />
+    <None Remove="Images\SubscriptionIcon\Expiring_soon.png" />
+    <None Remove="Images\SubscriptionIcon\Total.png" />
+    <None Remove="Images\SubscriptionIcon\TotalSub.png" />
+    <None Remove="Images\UserManagementIcon\UserManagementActicesubUser.png" />
+    <None Remove="Images\UserManagementIcon\UserManagementAdultUser.png" />
+    <None Remove="Images\UserManagementIcon\UserManagementChildUser.png" />
+    <None Remove="Images\UserManagementIcon\UserManagementTotalUser.png" />
+    <None Remove="Images\UserRatingsIcon\AvgRatings.png" />
+    <None Remove="Images\UserRatingsIcon\HighRatings.png" />
+    <None Remove="Images\UserRatingsIcon\RatingsSoon.png" />
+    <None Remove="Images\UserRatingsIcon\TotalRatings.png" />
+    <None Remove="Images\WatchHistoryIcon\avgWatchRate.png" />
+    <None Remove="Images\WatchHistoryIcon\TotalWatchHistorycount.png" />
+    <None Remove="Images\WatchHistoryIcon\WatchFinished.png" />
+    <None Remove="Images\WatchHistoryIcon\Watching.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\Pretendard-Bold.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Pretendard-Medium.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Pretendard-Regular.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\CineCodeIcon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\CineCodeText.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\CineCodeText_sidebar_compact.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ContentMappingIcon\MissingMapping.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ContentMappingIcon\TotalGenre.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\ContentMappingIcon\TotalOTTProvider.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\ActiveSubscription.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\AddContent.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\AddUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\ExpiringSoon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\ExportCSV.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\Link_GenreOTT.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\MissingGenreLinks.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\MissingOttLinks.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\TotalContent.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\TotalOttProvider.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashBoardIcon\TotalUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\amazon prime video.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\apple tv+.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\coupang play.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\disney+.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\hulu.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\max.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\netflix.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\paramount plus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\peacock.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\tving.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\watcha.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\OTTicon\wavve.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Content_Management.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\DashBoard.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Genre_OTT_LInk.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Members.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Rating.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Settings.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Statistics.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Subscriptions.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SidebarIcon\Watch_History.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\StatisticsIcon\StatisticsActiveSub.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\StatisticsIcon\StatisticsAvgScore.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\StatisticsIcon\StatisticsTotalUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\StatisticsIcon\StatisticsTotalWatchTIme.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SubscriptionIcon\Expired.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SubscriptionIcon\Expiring_soon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SubscriptionIcon\Total.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\SubscriptionIcon\TotalSub.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserManagementIcon\UserManagementActicesubUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserManagementIcon\UserManagementAdultUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserManagementIcon\UserManagementChildUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserManagementIcon\UserManagementTotalUser.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserRatingsIcon\AvgRatings.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserRatingsIcon\HighRatings.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserRatingsIcon\RatingsSoon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\UserRatingsIcon\TotalRatings.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\WatchHistoryIcon\avgWatchRate.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\WatchHistoryIcon\TotalWatchHistorycount.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\WatchHistoryIcon\WatchFinished.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\WatchHistoryIcon\Watching.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>

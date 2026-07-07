@@ -1,0 +1,269 @@
+﻿<UserControl
+    x:Class="CineCode.Views.ContentManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CineCode.Views.ContentManagement"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="756"
+    d:DesignWidth="1000"
+    FontFamily="/Fonts/#Pretendard"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <!-- 기본 카드 스타일 -->
+        <Style x:Key="ContentCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="BorderBrush" Value="#E6E1F0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="18"
+                        Opacity="0.08"
+                        ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- 메인 버튼 스타일 -->
+        <Style x:Key="ContentPrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="46" />
+            <Setter Property="MinWidth" Value="130" />
+            <Setter Property="Background" Value="#6D5DF6" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#5A4DE8" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#483CCF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 테두리 버튼 스타일 -->
+        <Style x:Key="ContentOutlineButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="46" />
+            <Setter Property="MinWidth" Value="130" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#6D5DF6" />
+            <Setter Property="BorderBrush" Value="#6D5DF6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F0EDFF" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E4DFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- 삭제 버튼 스타일 -->
+        <Style
+            x:Key="ContentDangerButtonStyle"
+            BasedOn="{StaticResource ContentOutlineButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Foreground" Value="#D9365B" />
+            <Setter Property="BorderBrush" Value="#D9365B" />
+        </Style>
+        <!-- DataGrid 기본 스타일 -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="HorizontalGridLinesBrush" Value="#EcE8F3" />
+            <Setter Property="RowHeight" Value="58" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserDeleteRows" Value="False" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#1E192D" />
+        </Style>
+
+        <!-- DataGrid 헤더 기본 스타일 -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Height" Value="48" />
+            <Setter Property="Background" Value="#F4F1FA" />
+            <Setter Property="Foreground" Value="#1E192D" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="BorderBrush" Value="#ECE8F3" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+
+        <!-- DataGrid 셀 기본 스타일 -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="#f8F9FC">
+        <Grid Margin="32,34,36,34">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="24" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- 타이틀 -->
+            <StackPanel Grid.Row="0">
+                <TextBlock
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Foreground="#1E192D"
+                    Text="Content Management" />
+                <TextBlock
+                    Margin="0,6,0,0"
+                    FontSize="14"
+                    Foreground="#777184"
+                    Text="콘텐츠 정보를 등록, 조회, 수정, 삭제합니다." />
+            </StackPanel>
+
+            <!-- 검색 / 필터 / 액션 영역 -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="360" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="140" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 검색 박스 -->
+                <Border
+                    Grid.Column="0"
+                    Height="46"
+                    Padding="14"
+                    Background="White"
+                    BorderBrush="#DDD7E8"
+                    BorderThickness="1"
+                    CornerRadius="14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="28" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="15"
+                            Foreground="#A8DADC"
+                            Text="🔍" />
+                        <TextBox
+                            x:Name="ContentSearchTextBox"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            FontSize="14"
+                            Foreground="#1E192D"
+                            Text=""
+                            TextChanged="ContentSearchTextBox_TextChanged" />
+                    </Grid>
+                </Border>
+                <!-- 타입 필터 -->
+                <ComboBox
+                    x:Name="ContentTypeComboBox"
+                    Grid.Column="2"
+                    Height="46"
+                    Padding="12,0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontSize="16"
+                    SelectedIndex="0"
+                    SelectionChanged="ContentTypeComboBox_SelectionChanged">
+                    <ComboBoxItem Content="All" />
+                    <ComboBoxItem Content="Movie" />
+                    <ComboBoxItem Content="TV" />
+                </ComboBox>
+
+                <!-- 콘텐츠 추가 -->
+                <Button
+                    x:Name="AddContentButton"
+                    Grid.Column="4"
+                    Click="AddContentButton_Click"
+                    Style="{StaticResource ContentPrimaryButtonStyle}">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,-2,8,0"
+                            FontSize="24"
+                            Text="+" />
+                        <TextBlock VerticalAlignment="Center" Text="콘텐츠 추가" />
+                    </StackPanel>
+                </Button>
+
+                <!-- CSV 추출 -->
+                <Button
+                    x:Name="ExportCsvButton"
+                    Grid.Column="6"
+                    Style="{StaticResource ContentOutlineButtonStyle}"
+                    Click="ExportCsvButton_Click">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,-2,8,0"
+                            FontSize="22"
+                            Text="↓" />
+                        <TextBlock VerticalAlignment="Center" Text="CSV 추출" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <!-- 콘텐츠 목록/추가 화면 교체 영역 -->
+            <ContentControl
+                x:Name="ContentBodyArea"
+                Grid.Row="4"
+                Grid.RowSpan="3" />
+
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,53 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.rsuser
+*.csproj.user
+*_wpftmp.csproj
+
+# Build output
+bin/
+obj/
+**/bin/
+**/obj/
+output/
+
+# .NET generated
+*.cache
+*.pdb
+*.baml
+*.lref
+*.AssemblyInfo.cs
+*.AssemblyInfoInputs.cache
+*.GeneratedMSBuildEditorConfig.editorconfig
+GeneratedMSBuildEditorConfig.editorconfig
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local secrets / environment files
+tmdbapi.txt
+*.env
+*.local
+appsettings.*.local.json
+
+# Local SQL drafts / validation scripts
+First_Query copy.sql
+First_Query_Validation.sql
+
+# Local planning notes
+/*.txt
+
+# Private documents and generated deliverables
+*.pdf
+*.docx
+*.hwp
+*.bak
+*.msi
+*.exe
+*.zip
+
+# Installer and local packaging artifacts
+CineCode/CineCodeSetup/

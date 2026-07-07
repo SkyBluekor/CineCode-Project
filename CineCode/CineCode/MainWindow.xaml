@@ -1,0 +1,361 @@
+﻿<Window x:Class="CineCode.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CineCode"
+        FontFamily="./Fonts/#Pretendard"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="900"
+        Width="1600"
+        MinWidth="1366"
+        MinHeight="820"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen">
+    <!-- 화면 전역에서 사용하는 버튼 스타일 -->
+    <Window.Resources>
+        <!-- 사이드바 메뉴 버튼 스타일 -->
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="44" />
+            <Setter Property="Margin" Value="0,4,0,4" />
+            <Setter Property="Padding" Value="18,0,0,0" />
+            <Setter Property="FontFamily" Value="./Fonts/#Pretendard" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#C9C6D8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="FontSize" Value="26" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="MenuBorder"
+                                Background="Transparent"
+                                CornerRadius="10">
+                            <Grid>
+                                <Border x:Name="SelectedBar"
+                                        Width="4"
+                                        Height="24"
+                                        Background="#B908FF"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Visibility="Collapsed" />
+                                <ContentPresenter VerticalAlignment="Center"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+
+                            <Trigger Property="Tag" Value="Selected">
+                                <Setter TargetName="SelectedBar" Property="Visibility" Value="Visible" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Add Content 같은 주요 작업에 사용하는 일반 버튼 스타일 -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="18,0" />
+            <Setter Property="Background" Value="#6D5DF6" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <!-- 사이드바 하단의 아이콘 전용 버튼 스타일 -->
+        <Style x:Key="SidebarIconOnlyButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="60" />
+            <Setter Property="Height" Value="60" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- 애플리케이션 전체 배경 -->
+    <Grid Background="#EEEAF8">
+        <!-- 전체 애플리케이션 카드 -->
+        <Border Margin="32"
+                CornerRadius="20"
+                Background="#F8F9FC"
+                ClipToBounds="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <!-- 왼쪽 사이드바와 오른쪽 콘텐츠 영역 -->
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 왼쪽 사이드바 -->
+                <Border Grid.Column="0"
+                        Background="#1E192D"
+                        Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- 로고 영역 -->
+                        <StackPanel Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <Image Source="/Images/CineCodeIcon.png"
+                                   Width="80"
+                                   Height="80" />
+                            <Image Source="/Images/CineCodeText_sidebar_compact.png"
+                                   Width="147"
+                                   Height="80"
+                                   Stretch="Uniform"
+                                   Margin="12,0,0,0" />
+                        </StackPanel>
+
+                        <!-- 사이드바 메뉴 영역 -->
+                        <StackPanel Grid.Row="2">
+                            <!-- 대시보드 메뉴 -->
+                            <Button x:Name="DashboardMenuButton"
+                                    Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Tag="Seletcted"
+                                    Click="DashboardMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/DashBoard.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock Text="DashBoard"
+                                               Width="165"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 콘텐츠 관리 메뉴 -->
+                            <Button x:Name="ContentManagaementMenuButton"
+                                    Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="ContentManagementMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Content_Management.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontSize="22"
+                                               TextAlignment="Center"
+                                               Width="165"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                               LineHeight="14">
+                                        <Run Text="Content" />
+                                        <LineBreak />
+                                        <Run Text="Management" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 콘텐츠와 OTT를 매핑하는 메뉴 -->
+                            <Button Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="ContentMappingMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Genre_OTT_LInk.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontSize="22"
+                                               TextAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                               LineHeight="23"
+                                               Width="165">
+                                        <Run Text="Content" />
+                                        <LineBreak />
+                                        <Run Text="Mapping" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 사용자 구독 관리 메뉴 -->
+                            <Button Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="SubScriptionsMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Subscriptions.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock Text="Subscriptions"
+                                               FontSize="22"
+                                               Width="165"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 시청 기록 메뉴 -->
+                            <Button Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="WatchHistoryMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Watch_History.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock Width="165"
+                                               TextAlignment="Center"
+                                               FontSize="22"
+                                               VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+                                        <Run Text="Watch" />
+                                        <LineBreak />
+                                        <Run Text="History" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 사용자 평가 점수 관리 메뉴 -->
+                            <Button Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="UserRatingMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Rating.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock Width="165"
+                                               TextAlignment="Center"
+                                               FontSize="24"
+                                               VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+                                        <Run Text="User" />
+                                        <LineBreak />
+                                        <Run Text="Ratings" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 통계 메뉴 -->
+                            <Button Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="StatisticsMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Statistics.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock Text="Statistics"
+                                               FontSize="24"
+                                               Width="165"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 회원 관리 메뉴 -->
+                            <Button Style="{StaticResource SidebarButtonStyle}"
+                                    Height="55"
+                                    Click="UserManagementMenuButton_Click">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Image Source="/Images/SidebarIcon/Members.png"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform"
+                                           Margin="0,0,12,0" />
+                                    <TextBlock Width="165"
+                                               TextAlignment="Center"
+                                               FontSize="22"
+                                               VerticalAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+                                        <Run Text="User" />
+                                        <LineBreak />
+                                        <Run Text="Management" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- 사이드바 하단 설정 메뉴 -->
+                        <Grid Grid.Row="3"
+                              Margin="0,20,0,0">
+                            <Button Style="{StaticResource SidebarIconOnlyButtonStyle}"
+                                    ToolTip="Settings"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Click="SettingButton_Click">
+                                <Image Source="/Images/SidebarIcon/Settings.png"
+                                       Width="50"
+                                       Height="50"
+                                       Stretch="Uniform"
+                                       RenderTransformOrigin="0.5,0.5">
+                                    <Image.RenderTransform>
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                    </Image.RenderTransform>
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Opacity" Value="0.85" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                             Value="True">
+                                                    <Setter Property="Opacity" Value="1" />
+                                                    <Setter Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="1.12" ScaleY="1.12" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- 선택한 메뉴의 화면이 표시되는 오른쪽 콘텐츠 영역 -->
+                <ContentControl x:Name="MainContentArea"
+                                Grid.Column="1" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

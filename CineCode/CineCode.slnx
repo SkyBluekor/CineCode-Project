@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CineCode/CineCode.csproj" />
+  <Project Path="CineCodeSetup/CineCodeSetup.vdproj" Type="Installer" />
+</Solution>

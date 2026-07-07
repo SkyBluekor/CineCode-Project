@@ -1,0 +1,598 @@
+﻿<UserControl
+    x:Class="CineCode.Views.DashboardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="756"
+    d:DesignWidth="1000"
+    FontFamily="/Fonts/#Pretendard"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <!--  대시보드에서 공통으로 사용하는 카드와 버튼 스타일을 정의합니다.  -->
+        <!--  대시보드 요약 카드 스타일  -->
+        <Style x:Key="DashboardCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#E5DDF8" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="18"
+                        Opacity="0.10"
+                        ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  관리 필요 항목 카드 스타일  -->
+        <Style x:Key="DashboardAlertCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FFD4DE" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="BorderBrush" Value="#FFD4DE" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="18"
+                        Opacity="0.08"
+                        ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  대시보드 빠른 실행 버튼 스타일  -->
+        <Style x:Key="DashboardActionButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="78" />
+            <Setter Property="Background" Value="#DEEFFD" />
+            <Setter Property="Foreground" Value="#1E192D" />
+            <Setter Property="BorderBrush" Value="#C7E4F8" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="18">
+
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#D2EAFB" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#A9D7F5" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#C5E2F7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <!--  대시보드 전체 배경 영역  -->
+    <Grid Background="#f8F9FC">
+        <!--  본문 여백과 섹션별 행 배치를 담당하는 컨테이너  -->
+        <Grid Margin="32,34,36,34">
+            <Grid.RowDefinitions>
+                <!--  제목, 요약 카드, 관리 필요 항목, 빠른 실행 섹션 사이의 간격을 정의합니다.  -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="70" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="70" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  대시보드 제목 영역  -->
+            <StackPanel Grid.Row="0">
+                <TextBlock
+                    FontSize="34"
+                    FontWeight="Bold"
+                    Foreground="#1E192D"
+                    Text="Dashboard" />
+
+                <TextBlock
+                    Margin="0,8,0,0"
+                    FontSize="16"
+                    Foreground="#777184"
+                    Text="CINECODE 관리자 현황을 한눈에 확인합니다." />
+            </StackPanel>
+
+            <!--  주요 현황을 보여주는 요약 카드 영역  -->
+            <UniformGrid
+                Grid.Row="2"
+                Columns="4"
+                Rows="1">
+
+                <!--  총 콘텐츠 수  -->
+                <Border Margin="0,0,16,0" Style="{StaticResource DashboardCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            Width="72"
+                            Height="72"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="#E5DDF8"
+                            CornerRadius="18">
+
+                            <Image
+                                Width="72"
+                                Height="72"
+                                Source="/Images/DashBoardIcon/TotalContent.png"
+                                Stretch="Uniform" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#777184"
+                                Text="총 콘텐츠 수"
+                                TextAlignment="Center" />
+
+                            <TextBlock
+                                x:Name="TotalContentsText"
+                                Margin="0,8,0,0"
+                                FontSize="34"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--  총 유저 수  -->
+                <Border Margin="0,0,16,0" Style="{StaticResource DashboardCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            Width="72"
+                            Height="72"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="#E5DDF8"
+                            CornerRadius="18">
+
+                            <Image
+                                Width="72"
+                                Height="72"
+                                Source="/Images/DashBoardIcon/TotalUser.png"
+                                Stretch="Uniform" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#777184"
+                                Text="총 유저 수"
+                                TextAlignment="Center" />
+
+                            <TextBlock
+                                x:Name="TotalUsersText"
+                                Margin="0,8,0,0"
+                                FontSize="34"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--  활성 구독  -->
+                <Border Margin="0,0,16,0" Style="{StaticResource DashboardCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            Width="72"
+                            Height="72"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="#E5DDF8"
+                            CornerRadius="18">
+
+                            <Image
+                                Width="72"
+                                Height="72"
+                                Source="/Images/DashBoardIcon/ActiveSubscription.png"
+                                Stretch="Uniform" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#777184"
+                                Text="활성 구독"
+                                TextAlignment="Center" />
+
+                            <TextBlock
+                                x:Name="ActiveSubscriptionText"
+                                Margin="0,8,0,0"
+                                FontSize="34"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--  OTT 제공자  -->
+                <Border Style="{StaticResource DashboardCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            Width="72"
+                            Height="72"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="#E5DDF8"
+                            CornerRadius="18">
+
+                            <Image
+                                Width="72"
+                                Height="72"
+                                Source="/Images/DashBoardIcon/TotalOttProvider.png"
+                                Stretch="Uniform" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#777184"
+                                Text="OTT 제공자"
+                                TextAlignment="Center" />
+
+                            <TextBlock
+                                x:Name="TotalOTTProviderText"
+                                Margin="0,8,0,0"
+                                FontSize="34"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+            </UniformGrid>
+
+            <!--  관리 필요 항목  -->
+            <StackPanel Grid.Row="4">
+                <TextBlock
+                    Margin="0,0,0,14"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="#1E192D"
+                    Text="관리 필요 항목" />
+
+                <!--  데이터 연결 또는 구독 상태 확인이 필요한 항목 카드  -->
+                <UniformGrid Columns="3" Rows="1">
+
+                    <!--  장르 미연결  -->
+                    <Border Margin="0,0,16,0" Style="{StaticResource DashboardAlertCardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="#FFAEC1"
+                                CornerRadius="18">
+
+                                <Image
+                                    Width="72"
+                                    Height="72"
+                                    Source="/Images/DashBoardIcon/MissingGenreLinks.png"
+                                    Stretch="Uniform" />
+                            </Border>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="#F48CA0"
+                                    Text="장르 미연결"
+                                    TextAlignment="Center" />
+
+                                <TextBlock
+                                    x:Name="MissingGenreLinksText"
+                                    Margin="0,8,0,0"
+                                    FontSize="34"
+                                    FontWeight="Bold"
+                                    Foreground="#D9365B"
+                                    Text="0"
+                                    TextAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!--  OTT 미연결  -->
+                    <Border Margin="0,0,16,0" Style="{StaticResource DashboardAlertCardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="#FFAEC1"
+                                CornerRadius="18">
+
+                                <Image
+                                    Width="72"
+                                    Height="72"
+                                    Source="/Images/DashBoardIcon/MissingOttLinks.png"
+                                    Stretch="Uniform" />
+                            </Border>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="#F48CA0"
+                                    Text="OTT 미연결"
+                                    TextAlignment="Center" />
+
+                                <TextBlock
+                                    x:Name="MissingOTTLinksText"
+                                    Margin="0,8,0,0"
+                                    FontSize="34"
+                                    FontWeight="Bold"
+                                    Foreground="#D9365B"
+                                    Text="0"
+                                    TextAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!--  구독 만료 임박  -->
+                    <Border Style="{StaticResource DashboardAlertCardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="#FFAEC1"
+                                CornerRadius="18">
+
+                                <Image
+                                    Width="72"
+                                    Height="72"
+                                    Source="/Images/DashBoardIcon/ExpiringSoon.png"
+                                    Stretch="Uniform" />
+                            </Border>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="#F48CA0"
+                                    Text="구독 만료 임박"
+                                    TextAlignment="Center" />
+
+                                <TextBlock
+                                    x:Name="ExpiringSoonText"
+                                    Margin="0,8,0,0"
+                                    FontSize="34"
+                                    FontWeight="Bold"
+                                    Foreground="#D9365B"
+                                    Text="0"
+                                    TextAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                </UniformGrid>
+            </StackPanel>
+
+            <!--  빠른 실행  -->
+            <StackPanel Grid.Row="6">
+                <TextBlock
+                    Margin="0,0,0,14"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="#1E192D"
+                    Text="빠른 실행" />
+
+                <!--  주요 관리 화면으로 이동하는 빠른 실행 버튼  -->
+                <UniformGrid Columns="4" Rows="1">
+
+                    <!--  콘텐츠 추가  -->
+                    <Button
+                        x:Name="AddContentButton"
+                        Margin="0,0,16,0"
+                        Click="QuickActionButton_Click"
+                        Style="{StaticResource DashboardActionButtonStyle}"
+                        Tag="ContentManagement">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                VerticalAlignment="Center"
+                                Source="/Images/DashBoardIcon/AddContent.png"
+                                Stretch="Uniform" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="#004B76"
+                                Text="콘텐츠 추가" />
+                        </Grid>
+                    </Button>
+
+                    <!--  사용자 추가  -->
+                    <Button
+                        x:Name="AddUserButton"
+                        Margin="0,0,16,0"
+                        Click="QuickActionButton_Click"
+                        Style="{StaticResource DashboardActionButtonStyle}"
+                        Tag="UserManagement">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                VerticalAlignment="Center"
+                                Source="/Images/DashBoardIcon/AddUser.png"
+                                Stretch="Uniform" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="#004B76"
+                                Text="사용자 추가" />
+                        </Grid>
+                    </Button>
+
+                    <!--  장르/OTT 연결  -->
+                    <Button
+                        x:Name="LinkGenreOttButton"
+                        Margin="0,0,16,0"
+                        Click="QuickActionButton_Click"
+                        Style="{StaticResource DashboardActionButtonStyle}"
+                        Tag="ContentMapping">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                VerticalAlignment="Center"
+                                Source="/Images/DashBoardIcon/Link_GenreOTT.png"
+                                Stretch="Uniform" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="#004B76"
+                                Text="장르/OTT 관리" />
+                        </Grid>
+                    </Button>
+
+                    <!--  CSV 추출  -->
+                    <Button
+                        x:Name="CSVExportButton"
+                        Click="QuickActionButton_Click"
+                        Style="{StaticResource DashboardActionButtonStyle}"
+                        Tag="CsvExport">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="0"
+                                Width="72"
+                                Height="72"
+                                VerticalAlignment="Center"
+                                Source="/Images/DashBoardIcon/ExportCSV.png"
+                                Stretch="Uniform" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="#004B76"
+                                Text="CSV 추출" />
+                        </Grid>
+                    </Button>
+
+                </UniformGrid>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

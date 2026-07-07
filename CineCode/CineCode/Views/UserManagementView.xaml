@@ -1,0 +1,1168 @@
+<UserControl
+    x:Class="CineCode.Views.UserManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="756"
+    d:DesignWidth="1000"
+    FontFamily="/Fonts/#Pretendard"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <!--  사용자 관리 화면에서 공통으로 사용하는 카드, 필터, 버튼, 표, 입력 폼 스타일을 정의합니다.  -->
+        <!--  상단 사용자 현황 요약 카드 스타일  -->
+        <Style
+            x:Key="SummaryCardStyle"
+            TargetType="Border">
+            <Setter
+                Property="Background"
+                Value="White" />
+            <Setter
+                Property="CornerRadius"
+                Value="18" />
+            <Setter
+                Property="Padding"
+                Value="16" />
+            <Setter
+                Property="BorderBrush"
+                Value="#E7E1F1" />
+            <Setter
+                Property="BorderThickness"
+                Value="1" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="18"
+                        Opacity="0.08"
+                        ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--  사용자 목록, 등록, 수정 화면을 감싸는 메인 카드 스타일  -->
+        <Style
+            x:Key="MainCardStyle"
+            TargetType="Border">
+            <Setter
+                Property="Background"
+                Value="White" />
+            <Setter
+                Property="CornerRadius"
+                Value="18" />
+            <Setter
+                Property="Padding"
+                Value="14" />
+            <Setter
+                Property="BorderBrush"
+                Value="#E7E1F1" />
+            <Setter
+                Property="BorderThickness"
+                Value="1" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="18"
+                        Opacity="0.08"
+                        ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--  검색어 입력, 필터, 사용자 등록/수정 입력칸을 감싸는 박스 스타일  -->
+        <Style
+            x:Key="FilterBoxStyle"
+            TargetType="Border">
+            <Setter
+                Property="Height"
+                Value="38" />
+            <Setter
+                Property="Background"
+                Value="White" />
+            <Setter
+                Property="CornerRadius"
+                Value="10" />
+            <Setter
+                Property="BorderBrush"
+                Value="#DED8EA" />
+            <Setter
+                Property="BorderThickness"
+                Value="1" />
+            <Setter
+                Property="Padding"
+                Value="10,0" />
+        </Style>
+        <!--  기본 테두리를 제거한 입력 TextBox 스타일  -->
+        <Style
+            x:Key="CleanTextBoxStyle"
+            TargetType="TextBox">
+            <Setter
+                Property="BorderThickness"
+                Value="0" />
+            <Setter
+                Property="Background"
+                Value="Transparent" />
+            <Setter
+                Property="VerticalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="FontSize"
+                Value="13" />
+            <Setter
+                Property="Foreground"
+                Value="#1E192D" />
+            <Setter
+                Property="CaretBrush"
+                Value="#6D5DF6" />
+        </Style>
+        <!--  필터와 선택 입력에 사용하는 ComboBox 스타일  -->
+        <Style
+            x:Key="CleanComboBoxStyle"
+            TargetType="ComboBox">
+            <Setter
+                Property="BorderThickness"
+                Value="0" />
+            <Setter
+                Property="Background"
+                Value="Transparent" />
+            <Setter
+                Property="VerticalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="FontSize"
+                Value="13" />
+            <Setter
+                Property="Foreground"
+                Value="#1E192D" />
+        </Style>
+        <!--  조회, 등록, 수정, CSV 추출 버튼 공통 스타일  -->
+        <Style
+            x:Key="ActionButtonStyle"
+            TargetType="Button">
+            <Setter
+                Property="Height"
+                Value="38" />
+            <Setter
+                Property="MinWidth"
+                Value="0" />
+            <Setter
+                Property="FontSize"
+                Value="13" />
+            <Setter
+                Property="FontWeight"
+                Value="SemiBold" />
+            <Setter
+                Property="Cursor"
+                Value="Hand" />
+            <Setter
+                Property="BorderThickness"
+                Value="1" />
+            <Setter
+                Property="Padding"
+                Value="10,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10">
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger
+                                Property="IsMouseOver"
+                                Value="True">
+                                <Setter
+                                    TargetName="ButtonBorder"
+                                    Property="Opacity"
+                                    Value="0.88" />
+                            </Trigger>
+                            <Trigger
+                                Property="IsEnabled"
+                                Value="False">
+                                <Setter
+                                    TargetName="ButtonBorder"
+                                    Property="Background"
+                                    Value="#ECEAF1" />
+                                <Setter
+                                    TargetName="ButtonBorder"
+                                    Property="BorderBrush"
+                                    Value="#ECEAF1" />
+                                <Setter
+                                    Property="Foreground"
+                                    Value="#AAA4B5" />
+                                <Setter
+                                    Property="Cursor"
+                                    Value="Arrow" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--  사용자 목록 DataGrid 스타일  -->
+        <Style
+            x:Key="UserDataGridStyle"
+            TargetType="DataGrid">
+            <Setter
+                Property="Background"
+                Value="White" />
+            <Setter
+                Property="BorderBrush"
+                Value="#E4DEEF" />
+            <Setter
+                Property="BorderThickness"
+                Value="1" />
+            <Setter
+                Property="MinRowHeight"
+                Value="42" />
+            <Setter
+                Property="HeadersVisibility"
+                Value="Column" />
+            <Setter
+                Property="GridLinesVisibility"
+                Value="Horizontal" />
+            <Setter
+                Property="HorizontalGridLinesBrush"
+                Value="#EEEAF5" />
+            <Setter
+                Property="VerticalGridLinesBrush"
+                Value="#EEEAF5" />
+            <Setter
+                Property="CanUserAddRows"
+                Value="False" />
+            <Setter
+                Property="CanUserDeleteRows"
+                Value="False" />
+            <Setter
+                Property="CanUserResizeRows"
+                Value="False" />
+            <Setter
+                Property="AutoGenerateColumns"
+                Value="False" />
+            <Setter
+                Property="IsReadOnly"
+                Value="True" />
+            <Setter
+                Property="SelectionMode"
+                Value="Single" />
+            <Setter
+                Property="SelectionUnit"
+                Value="FullRow" />
+            <Setter
+                Property="FontSize"
+                Value="13" />
+            <Setter
+                Property="Foreground"
+                Value="#1E192D" />
+            <Setter
+                Property="HorizontalScrollBarVisibility"
+                Value="Auto" />
+            <Setter
+                Property="VerticalScrollBarVisibility"
+                Value="Auto" />
+        </Style>
+        <!--  DataGrid 헤더 스타일  -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter
+                Property="Height"
+                Value="40" />
+            <Setter
+                Property="Background"
+                Value="#F5F2FB" />
+            <Setter
+                Property="Foreground"
+                Value="#5F5870" />
+            <Setter
+                Property="FontWeight"
+                Value="SemiBold" />
+            <Setter
+                Property="FontSize"
+                Value="12" />
+            <Setter
+                Property="HorizontalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="VerticalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="BorderBrush"
+                Value="#E4DEEF" />
+            <Setter
+                Property="BorderThickness"
+                Value="0,0,1,1" />
+        </Style>
+        <!--  DataGrid 셀 스타일  -->
+        <Style TargetType="DataGridCell">
+            <Setter
+                Property="BorderThickness"
+                Value="0" />
+            <Setter
+                Property="TextBlock.TextAlignment"
+                Value="Center" />
+            <Setter
+                Property="VerticalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="Padding"
+                Value="4,0" />
+        </Style>
+        <!--  가운데 정렬 셀 텍스트 스타일  -->
+        <Style
+            x:Key="CenterCellTextStyle"
+            TargetType="TextBlock">
+            <Setter
+                Property="TextAlignment"
+                Value="Center" />
+            <Setter
+                Property="VerticalAlignment"
+                Value="Center" />
+            <Setter
+                Property="TextWrapping"
+                Value="Wrap" />
+            <Setter
+                Property="Padding"
+                Value="4,3" />
+        </Style>
+        <!--  왼쪽 정렬 셀 텍스트 스타일  -->
+        <Style
+            x:Key="LeftCellTextStyle"
+            TargetType="TextBlock">
+            <Setter
+                Property="TextAlignment"
+                Value="Left" />
+            <Setter
+                Property="VerticalAlignment"
+                Value="Center" />
+            <Setter
+                Property="TextWrapping"
+                Value="Wrap" />
+            <Setter
+                Property="Padding"
+                Value="8,3" />
+        </Style>
+        <!--  사용자 등록/수정 입력 폼 라벨 스타일  -->
+        <Style
+            x:Key="FormLabelStyle"
+            TargetType="TextBlock">
+            <Setter
+                Property="FontSize"
+                Value="13" />
+            <Setter
+                Property="FontWeight"
+                Value="SemiBold" />
+            <Setter
+                Property="Foreground"
+                Value="#5F5870" />
+            <Setter
+                Property="Margin"
+                Value="0,0,0,8" />
+        </Style>
+        <!--  수정할 수 없는 사용자 속성 표시 스타일  -->
+        <Style
+            x:Key="ReadOnlyValueTextStyle"
+            TargetType="TextBlock">
+            <Setter
+                Property="FontSize"
+                Value="14" />
+            <Setter
+                Property="FontWeight"
+                Value="SemiBold" />
+            <Setter
+                Property="Foreground"
+                Value="#1E192D" />
+            <Setter
+                Property="VerticalAlignment"
+                Value="Center" />
+        </Style>
+    </UserControl.Resources>
+    <!--  사용자 관리 화면 전체 배경 영역  -->
+    <Grid Background="#F8F9FC">
+        <!--  제목, 요약 카드, 필터, 본문 카드를 배치하는 컨테이너  -->
+        <Grid Margin="28">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="18" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="18" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="14" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!--  제목  -->
+            <StackPanel Grid.Row="0">
+                <TextBlock
+                    FontSize="30"
+                    FontWeight="Bold"
+                    Foreground="#1E192D"
+                    Text="User Management" />
+                <TextBlock
+                    Margin="0,6,0,0"
+                    FontSize="14"
+                    Foreground="#777184"
+                    Text="사용자 정보를 등록하고 관리합니다." />
+            </StackPanel>
+            <!--  요약 카드  -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!--  총 유저  -->
+                <Border
+                    Grid.Column="0"
+                    Style="{StaticResource SummaryCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Width="50"
+                            Height="50"
+                            Background="#EEF3FF"
+                            CornerRadius="14">
+                            <Image
+                                Width="40"
+                                Height="40"
+                                Source="/Images/UserManagementIcon/UserManagementTotalUser.png"
+                                Stretch="Uniform" />
+                        </Border>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#6B6380"
+                                Text="총 유저"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                x:Name="TotalUserCountText"
+                                Margin="0,4,0,0"
+                                FontSize="24"
+                                TextAlignment="Center"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="#3B82F6"
+                                Text="전체 사용자 기준"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <!--  활성 구독 유저  -->
+                <Border
+                    Grid.Column="2"
+                    Style="{StaticResource SummaryCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Width="50"
+                            Height="50"
+                            Background="#F4EEFF"
+                            CornerRadius="14">
+                            <Image
+                                Width="40"
+                                Height="40"
+                                Source="/Images/UserManagementIcon/UserManagementActicesubUser.png"
+                                Stretch="Uniform" />
+                        </Border>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#6B6380"
+                                Text="활성 구독 유저"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                x:Name="ActiveSubscriptionUserCountText"
+                                Margin="0,4,0,0"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="#7B4DF6"
+                                Text="구독 만료일 기준"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <!--  아동 계정  -->
+                <Border
+                    Grid.Column="4"
+                    Style="{StaticResource SummaryCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Width="50"
+                            Height="50"
+                            Background="#FFEFF3"
+                            CornerRadius="14">
+                            <Image
+                                Width="40"
+                                Height="40"
+                                Source="/Images/UserManagementIcon/UserManagementChildUser.png"
+                                Stretch="Uniform" />
+                        </Border>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#6B6380"
+                                Text="아동 계정"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                x:Name="ChildUserCountText"
+                                Margin="0,4,0,0"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="#F05D7A"
+                                Text="구분 = 아동"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <!--  성인 계정  -->
+                <Border
+                    Grid.Column="6"
+                    Style="{StaticResource SummaryCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Width="50"
+                            Height="50"
+                            Background="#EEF3FF"
+                            CornerRadius="14">
+                            <Image
+                                Width="40"
+                                Height="40"
+                                Source="/Images/UserManagementIcon/UserManagementAdultUser.png"
+                                Stretch="Uniform" />
+                        </Border>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="#6B6380"
+                                Text="성인 계정"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                x:Name="AdultUserCountText"
+                                Margin="0,4,0,0"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="0"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="#3B82F6"
+                                Text="구분 = 성인"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+            <!--  검색 / 필터 / 상단 버튼  -->
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="115" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="115" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="115" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="112" />
+                </Grid.ColumnDefinitions>
+                <!--  검색  -->
+                <Border
+                    Grid.Column="0"
+                    Style="{StaticResource FilterBoxStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            Foreground="#9B94A8"
+                            Text="🔍" />
+                        <TextBox
+                            x:Name="UserSearchTextBox"
+                            Grid.Column="1"
+                            Style="{StaticResource CleanTextBoxStyle}"
+                            TextChanged="UserSearchTextBox_TextChanged" />
+                    </Grid>
+                </Border>
+                <!--  성별 필터  -->
+                <Border
+                    Grid.Column="2"
+                    Style="{StaticResource FilterBoxStyle}">
+                    <ComboBox
+                        x:Name="GenderFilterComboBox"
+                        SelectedIndex="0"
+                        Style="{StaticResource CleanComboBoxStyle}"
+                        SelectionChanged="UserFilterComboBox_SelectionChanged">
+                        <ComboBoxItem Content="성별 전체" />
+                        <ComboBoxItem Content="남성" />
+                        <ComboBoxItem Content="여성" />
+                    </ComboBox>
+                </Border>
+                <!--  구분 필터  -->
+                <Border
+                    Grid.Column="4"
+                    Style="{StaticResource FilterBoxStyle}">
+                    <ComboBox
+                        x:Name="UserTypeFilterComboBox"
+                        SelectedIndex="0"
+                        Style="{StaticResource CleanComboBoxStyle}"
+                        SelectionChanged="UserFilterComboBox_SelectionChanged">
+                        <ComboBoxItem Content="구분 전체" />
+                        <ComboBoxItem Content="성인" />
+                        <ComboBoxItem Content="아동" />
+                    </ComboBox>
+                </Border>
+                <!--  상태 필터  -->
+                <Border
+                    Grid.Column="6"
+                    Style="{StaticResource FilterBoxStyle}">
+                    <ComboBox
+                        x:Name="UserStatusFilterComboBox"
+                        SelectedIndex="0"
+                        Style="{StaticResource CleanComboBoxStyle}"
+                        SelectionChanged="UserFilterComboBox_SelectionChanged">
+                        <ComboBoxItem Content="상태 전체" />
+                        <ComboBoxItem Content="활성" />
+                        <ComboBoxItem Content="만료" />
+                        <ComboBoxItem Content="미구독" />
+                    </ComboBox>
+                </Border>
+                <!--  사용자 추가  -->
+                <Button
+                    x:Name="AddUserButton"
+                    Grid.Column="8"
+                    Width="112"
+                    Background="#6D5DF6"
+                    BorderBrush="#6D5DF6"
+                    Click="AddUserButton_Click"
+                    Content="+ 사용자 추가"
+                    Foreground="White"
+                    Style="{StaticResource ActionButtonStyle}" />
+            </Grid>
+            <!--  본문 카드  -->
+            <Border
+                Grid.Row="6"
+                Style="{StaticResource MainCardStyle}">
+                <Grid>
+                    <!--  =========================  -->
+                    <!--  1. 사용자 목록 화면  -->
+                    <!--  =========================  -->
+                    <Grid
+                        x:Name="UserListPanel"
+                        Visibility="Visible">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="12" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid
+                            x:Name="UserDataGrid"
+                            Grid.Row="0"
+                            SelectionChanged="UserDataGrid_SelectionChanged"
+                            Style="{StaticResource UserDataGridStyle}">
+                            <DataGrid.Columns>
+                                <!--  User ID  -->
+                                <DataGridTextColumn
+                                    Width="85"
+                                    Binding="{Binding User_ID}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="User ID"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  이름  -->
+                                <DataGridTextColumn
+                                    Width="1.2*"
+                                    MinWidth="120"
+                                    Binding="{Binding User_Name}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="이름"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  성별  -->
+                                <DataGridTextColumn
+                                    Width="90"
+                                    Binding="{Binding User_Sex}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="성별"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  구분  -->
+                                <DataGridTextColumn
+                                    Width="90"
+                                    Binding="{Binding UserType}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="구분"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  휴대전화  -->
+                                <DataGridTextColumn
+                                    Width="1.2*"
+                                    MinWidth="135"
+                                    Binding="{Binding PhoneText}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="휴대전화"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  구독 OTT 수  -->
+                                <DataGridTextColumn
+                                    Width="105"
+                                    Binding="{Binding SubscriptionCount}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="구독 OTT 수"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  만료일  -->
+                                <DataGridTextColumn
+                                    Width="120"
+                                    Binding="{Binding LatestExpiredAtText}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="만료일"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <!--  상태  -->
+                                <DataGridTextColumn
+                                    Width="90"
+                                    Binding="{Binding UserStatus}"
+                                    ElementStyle="{StaticResource CenterCellTextStyle}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock
+                                            Text="상태"
+                                            TextAlignment="Center" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <!--  하단 버튼  -->
+                        <StackPanel
+                            Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                x:Name="EditUserButton"
+                                Width="84"
+                                Background="White"
+                                BorderBrush="#BFAEFF"
+                                Click="EditUserButton_Click"
+                                Content="수정"
+                                Foreground="#6D5DF6"
+                                IsEnabled="False"
+                                Style="{StaticResource ActionButtonStyle}" />
+                            <Button
+                                x:Name="DeleteUserButton"
+                                Width="84"
+                                Margin="8,0,0,0"
+                                Background="White"
+                                BorderBrush="#FFB8C8"
+                                Click="DeleteUserButton_Click"
+                                Content="삭제"
+                                Foreground="#D9365B"
+                                IsEnabled="False"
+                                Style="{StaticResource ActionButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                    <!--  =========================  -->
+                    <!--  2. 사용자 추가 화면  -->
+                    <!--  =========================  -->
+                    <Grid
+                        x:Name="UserAddPanel"
+                        Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="24" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="18" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <!--  제목  -->
+                        <StackPanel Grid.Row="0">
+                            <TextBlock
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="사용자 추가" />
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                FontSize="14"
+                                Foreground="#777184"
+                                Text="새 사용자의 기본 정보를 등록합니다." />
+                        </StackPanel>
+                        <!--  1행  -->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1.2*" />
+                            </Grid.ColumnDefinitions>
+                            <!--  이름  -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="이름 *" />
+                                <Border Style="{StaticResource FilterBoxStyle}">
+                                    <TextBox
+                                        x:Name="AddUserNameTextBox"
+                                        Style="{StaticResource CleanTextBoxStyle}" />
+                                </Border>
+                            </StackPanel>
+                            <!--  성별  -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="성별 *" />
+                                <Border Style="{StaticResource FilterBoxStyle}">
+                                    <ComboBox
+                                        x:Name="AddGenderComboBox"
+                                        SelectedIndex="-1"
+                                        Style="{StaticResource CleanComboBoxStyle}">
+                                        <ComboBoxItem Content="남성" />
+                                        <ComboBoxItem Content="여성" />
+                                    </ComboBox>
+                                </Border>
+                            </StackPanel>
+                            <!--  휴대전화  -->
+                            <StackPanel Grid.Column="4">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="휴대전화 *" />
+                                <Border Style="{StaticResource FilterBoxStyle}">
+                                    <TextBox
+                                        x:Name="AddPhoneTextBox"
+                                        Style="{StaticResource CleanTextBoxStyle}"
+                                        MaxLength="11"
+                                        PreviewTextInput="PhoneNumberOnly_PreviewTextInput"
+                                        DataObject.Pasting="PhoneNumberOnly_Pasting" />
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                        <!--  2행  -->
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1.2*" />
+                            </Grid.ColumnDefinitions>
+                            <!--  주민등록번호  -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="생년월일 *" />
+                                <Border Style="{StaticResource FilterBoxStyle}">
+                                    <DatePicker
+                                        x:Name="AddBirthDatePicker"
+                                        BorderThickness="0"
+                                        Background="Transparent"
+                                        VerticalContentAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        SelectedDateChanged="AddBirthDatePicker_SelectedDateChanged" />
+                                </Border>
+                            </StackPanel>
+                            <!--  구분  -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="구분" />
+                                <Border
+                                    Background="#F8F6FF"
+                                    Style="{StaticResource FilterBoxStyle}">
+                                    <TextBlock
+                                        x:Name="AddUserTypeText"
+                                        Style="{StaticResource ReadOnlyValueTextStyle}"
+                                        Text="-" />
+                                </Border>
+                            </StackPanel>
+                            <!--  안내  -->
+                            <StackPanel
+                                Grid.Column="4"
+                                VerticalAlignment="Bottom">
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="#777184"
+                                    Text="※ 구분은 주민등록번호 기준으로 아동/성인을 계산합니다."
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                        <!--  하단 버튼  -->
+                        <StackPanel
+                            Grid.Row="6"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                x:Name="BackFromAddUserButton"
+                                Width="92"
+                                Background="White"
+                                BorderBrush="#CFC8DC"
+                                Click="BackFromAddUserButton_Click"
+                                Content="목록으로"
+                                Foreground="#5F5870"
+                                Style="{StaticResource ActionButtonStyle}" />
+                            <Button
+                                x:Name="ResetAddUserFormButton"
+                                Width="82"
+                                Margin="8,0,0,0"
+                                Background="White"
+                                BorderBrush="#C8B8FF"
+                                Click="ResetAddUserFormButton_Click"
+                                Content="초기화"
+                                Foreground="#6D5DF6"
+                                Style="{StaticResource ActionButtonStyle}" />
+                            <Button
+                                x:Name="SaveAddUserButton"
+                                Width="92"
+                                Margin="8,0,0,0"
+                                Background="#6D5DF6"
+                                BorderBrush="#6D5DF6"
+                                Click="SaveAddUserButton_Click"
+                                Content="등록 저장"
+                                Foreground="White"
+                                Style="{StaticResource ActionButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                    <!--  =========================  -->
+                    <!--  3. 사용자 수정 화면  -->
+                    <!--  =========================  -->
+                    <Grid
+                        x:Name="UserEditPanel"
+                        Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="24" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="18" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <!--  제목  -->
+                        <StackPanel Grid.Row="0">
+                            <TextBlock
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="#1E192D"
+                                Text="사용자 수정" />
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                FontSize="14"
+                                Foreground="#777184"
+                                Text="선택한 사용자의 이름과 휴대전화만 수정합니다." />
+                        </StackPanel>
+                        <!--  1행  -->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <!--  User ID  -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="User ID" />
+                                <Border
+                                    Background="#F8F6FF"
+                                    Style="{StaticResource FilterBoxStyle}">
+                                    <TextBlock
+                                        x:Name="EditUserIdText"
+                                        Style="{StaticResource ReadOnlyValueTextStyle}"
+                                        Text="-" />
+                                </Border>
+                            </StackPanel>
+                            <!--  성별  -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="성별" />
+                                <Border
+                                    Background="#F8F6FF"
+                                    Style="{StaticResource FilterBoxStyle}">
+                                    <TextBlock
+                                        x:Name="EditGenderText"
+                                        Style="{StaticResource ReadOnlyValueTextStyle}"
+                                        Text="-" />
+                                </Border>
+                            </StackPanel>
+                            <!--  구분  -->
+                            <StackPanel Grid.Column="4">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="구분" />
+                                <Border
+                                    Background="#F8F6FF"
+                                    Style="{StaticResource FilterBoxStyle}">
+                                    <TextBlock
+                                        x:Name="EditUserTypeText"
+                                        Style="{StaticResource ReadOnlyValueTextStyle}"
+                                        Text="-" />
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                        <!--  2행  -->
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <!--  이름  -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="이름 *" />
+                                <Border Style="{StaticResource FilterBoxStyle}">
+                                    <TextBox
+                                        x:Name="EditUserNameTextBox"
+                                        Style="{StaticResource CleanTextBoxStyle}" />
+                                </Border>
+                            </StackPanel>
+                            <!--  휴대전화  -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock
+                                    Style="{StaticResource FormLabelStyle}"
+                                    Text="휴대전화 *" />
+                                <Border Style="{StaticResource FilterBoxStyle}">
+                                    <TextBox
+                                        x:Name="EditPhoneTextBox"
+                                        Style="{StaticResource CleanTextBoxStyle}"
+                                        MaxLength="11"
+                                        PreviewTextInput="PhoneNumberOnly_PreviewTextInput"
+                                        DataObject.Pasting="PhoneNumberOnly_Pasting" />
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                        <!--  안내  -->
+                        <Border
+                            Grid.Row="5"
+                            Margin="0,24,0,0"
+                            Padding="16"
+                            VerticalAlignment="Top"
+                            Background="#F8F6FF"
+                            BorderBrush="#E1D9FF"
+                            BorderThickness="1"
+                            CornerRadius="12">
+                            <TextBlock
+                                FontSize="13"
+                                Foreground="#6B6380"
+                                Text="※ User ID, 성별, 구분, 구독 OTT 수, 만료일, 상태는 이 화면에서 수정하지 않습니다. 이름과 휴대전화만 수정합니다."
+                                TextWrapping="Wrap" />
+                        </Border>
+                        <!--  하단 버튼  -->
+                        <StackPanel
+                            Grid.Row="6"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                x:Name="BackFromEditUserButton"
+                                Width="92"
+                                Background="White"
+                                BorderBrush="#CFC8DC"
+                                Click="BackFromEditUserButton_Click"
+                                Content="목록으로"
+                                Foreground="#5F5870"
+                                Style="{StaticResource ActionButtonStyle}" />
+                            <Button
+                                x:Name="ResetEditUserFormButton"
+                                Width="82"
+                                Margin="8,0,0,0"
+                                Background="White"
+                                BorderBrush="#C8B8FF"
+                                Click="ResetEditUserFormButton_Click"
+                                Content="초기화"
+                                Foreground="#6D5DF6"
+                                Style="{StaticResource ActionButtonStyle}" />
+                            <Button
+                                x:Name="SaveEditUserButton"
+                                Width="92"
+                                Margin="8,0,0,0"
+                                Background="#6D5DF6"
+                                BorderBrush="#6D5DF6"
+                                Click="SaveEditUserButton_Click"
+                                Content="수정 저장"
+                                Foreground="White"
+                                Style="{StaticResource ActionButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
