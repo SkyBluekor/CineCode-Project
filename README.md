@@ -88,8 +88,6 @@ Microsoft SQL Server (저장 프로시저 및 테이블)
 
 ## 화면
 
-기존 프로그램 화면을 2열 갤러리로 정리했습니다. 이미지를 클릭하면 원본을 확인할 수 있습니다.
-
 <table>
   <tr>
     <td align="center" width="50%">
