@@ -9,7 +9,12 @@ namespace CINECODE
     {
         static async Task Main()
         {
-            string apiKey = "9c0e4e583a4f265cff7fb3629dc413fe";
+            string? apiKey = Environment.GetEnvironmentVariable("TMDB_API_KEY");
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                Console.Error.WriteLine("TMDB_API_KEY 환경 변수가 설정되지 않았습니다.");
+                return;
+            }
             string query = Uri.EscapeDataString("기생충");
 
             string searchUrl =
