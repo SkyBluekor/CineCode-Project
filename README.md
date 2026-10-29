@@ -29,7 +29,9 @@ CineCode는 이러한 **데이터 간 관계와 업무 규칙을 체계적으로
 
 ## 실제 프로그램 화면
 
-![Dashboard](CineCode/CineCode/Images/ViewScreenImages/DashboardView.png)
+<p align="center">
+  <a href="CineCode/CineCode/Images/ViewScreenImages/DashboardView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/DashboardView.png" alt="CineCode 대시보드" width="760"></a>
+</p>
 
 ## 주요 기능
 
@@ -86,35 +88,48 @@ Microsoft SQL Server (저장 프로시저 및 테이블)
 
 ## 화면
 
-### 콘텐츠 관리
+기존 프로그램 화면을 2열 갤러리로 정리했습니다. 이미지를 클릭하면 원본을 확인할 수 있습니다.
 
-![Content Management](CineCode/CineCode/Images/ViewScreenImages/ContentManagementListView.png)
-
-### 콘텐츠 등록
-
-![Content Add](CineCode/CineCode/Images/ViewScreenImages/ContentManagementAddView.png)
-
-### 콘텐츠 매핑
-
-![Content Mapping](CineCode/CineCode/Images/ViewScreenImages/ContentMappingConnectionsView.png)
-
-### 구독 관리
-
-![Subscriptions](CineCode/CineCode/Images/ViewScreenImages/SubscriptionsListView.png)
-
-### 시청 기록
-
-![Watch History](CineCode/CineCode/Images/ViewScreenImages/WatchHistoryStartView.png)
-
-### 통계
-
-![Statistics](CineCode/CineCode/Images/ViewScreenImages/StatisticsView.png)
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="CineCode/CineCode/Images/ViewScreenImages/ContentManagementListView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/ContentManagementListView.png" width="350" alt="콘텐츠 관리 화면"></a><br>
+      <sub><strong>콘텐츠 관리</strong></sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="CineCode/CineCode/Images/ViewScreenImages/ContentManagementAddView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/ContentManagementAddView.png" width="350" alt="콘텐츠 등록 화면"></a><br>
+      <sub><strong>콘텐츠 등록</strong></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="CineCode/CineCode/Images/ViewScreenImages/ContentMappingConnectionsView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/ContentMappingConnectionsView.png" width="350" alt="콘텐츠 매핑 화면"></a><br>
+      <sub><strong>콘텐츠 매핑</strong></sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="CineCode/CineCode/Images/ViewScreenImages/SubscriptionsListView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/SubscriptionsListView.png" width="350" alt="구독 관리 화면"></a><br>
+      <sub><strong>구독 관리</strong></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="CineCode/CineCode/Images/ViewScreenImages/WatchHistoryStartView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/WatchHistoryStartView.png" width="350" alt="시청 기록 화면"></a><br>
+      <sub><strong>시청 기록</strong></sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="CineCode/CineCode/Images/ViewScreenImages/StatisticsView.png"><img src="CineCode/CineCode/Images/ViewScreenImages/StatisticsView.png" width="350" alt="통계 화면"></a><br>
+      <sub><strong>통계</strong></sub>
+    </td>
+  </tr>
+</table>
 
 ## 데이터베이스 설계 (ERD)
 
 CineCode는 Microsoft SQL Server에 **10개 테이블**을 구성하여 콘텐츠, OTT 플랫폼, 사용자와 시청 데이터를 관계형 구조로 관리합니다.
 
-![ERD](CineCode/CineCode/Images/ViewScreenImages/ERD_DIagram.png)
+<p align="center">
+  <a href="CineCode/CineCode/Images/ViewScreenImages/ERD_DIagram.png"><img src="CineCode/CineCode/Images/ViewScreenImages/ERD_DIagram.png" alt="CINECODEDB ERD" width="850"></a>
+</p>
 
 ### 주요 테이블 구성
 
