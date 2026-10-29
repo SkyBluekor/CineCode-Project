@@ -42,6 +42,48 @@ CineCode는 이러한 **데이터 간 관계와 업무 규칙을 체계적으로
 - 콘텐츠 매핑: 장르, OTT 제공자, 콘텐츠 연결 관계 관리
 - 통계: 인기 콘텐츠, 플랫폼 점유율, 월별 시청 활동 분석
 
+## 시스템 구조
+
+CineCode는 **WPF 화면, C# 서비스 계층, Microsoft SQL Server 데이터베이스**를 연결한 데스크톱 관리 프로그램입니다.
+
+사용자가 화면에서 콘텐츠를 등록하거나 구독·시청 정보를 관리하면, C# 서비스가 SQL Server에 데이터를 요청하고 처리 결과를 화면에 반영합니다.
+
+**주요 데이터 처리 흐름**
+
+```text
+WPF 화면 (XAML / Code-behind)
+    ↓
+C# Service 계층
+    ↓
+Microsoft.Data.SqlClient
+    ↓
+Microsoft SQL Server (저장 프로시저 및 테이블)
+```
+
+콘텐츠 검색 시에는 `TmdbService`를 통해 TMDB API에서 영화·드라마 정보를 가져와 등록 과정에 활용합니다.
+
+### 주요 구성 요소
+
+| 구성 | 역할 |
+|---|---|
+| **WPF View** | 관리자 화면 구성, 사용자 입력 및 이벤트 처리 |
+| **Service** | 콘텐츠·구독·시청·평점 등 기능별 데이터 처리 |
+| **Model** | 조회 결과와 화면 표시 데이터 관리 |
+| **DbConnectionFactory** | SQL Server 연결 생성 및 연결 설정 관리 |
+| **SQL Server** | 관계형 데이터 저장, 제약조건 및 저장 프로시저를 통한 업무 규칙 처리 |
+| **TMDB API** | 영화·TV 콘텐츠 검색 및 상세 정보 조회 |
+
+주요 업무 기능은 Service 클래스로 분리했으며, 일부 화면의 CSV 내보내기 기능은 화면 코드에서 데이터베이스를 직접 조회합니다.
+
+### 실제 처리 예시 — 시청 기록 등록
+
+1. 관리자가 WPF 화면에서 사용자, 콘텐츠, OTT 플랫폼을 선택합니다.
+2. `WatchHistoryService`에서 `Usp_StartWatchHistory` 저장 프로시저를 호출합니다.
+3. SQL Server에서 콘텐츠 제공 여부, 사용자 구독 상태, 관람 연령 조건을 검증합니다.
+4. 모든 조건을 만족하면 시청 기록을 저장하고 결과를 화면에 반영합니다.
+
+이처럼 화면 입력뿐 아니라 **데이터베이스에서도 업무 규칙을 검증**하도록 구성했습니다.
+
 ## 화면
 
 ### 콘텐츠 관리
@@ -68,9 +110,41 @@ CineCode는 이러한 **데이터 간 관계와 업무 규칙을 체계적으로
 
 ![Statistics](CineCode/CineCode/Images/ViewScreenImages/StatisticsView.png)
 
-## ERD
+## 데이터베이스 설계 (ERD)
+
+CineCode는 Microsoft SQL Server에 **10개 테이블**을 구성하여 콘텐츠, OTT 플랫폼, 사용자와 시청 데이터를 관계형 구조로 관리합니다.
 
 ![ERD](CineCode/CineCode/Images/ViewScreenImages/ERD_DIagram.png)
+
+### 주요 테이블 구성
+
+| 분류 | 테이블 | 역할 |
+|---|---|---|
+| 콘텐츠 | `Content`, `Genre` | 영화·TV 콘텐츠 및 장르 정보 |
+| 콘텐츠 연결 | `ContentGenre`, `ContentOTTProvider` | 콘텐츠와 장르·OTT의 다대다 관계 관리 |
+| 사용자·구독 | `AppUser`, `OTTProvider`, `Usersubscription` | 사용자, OTT 제공자, 구독 기간 및 결제 정보 |
+| 시청·평점 | `WatchHistory`, `UserRating` | 시청 기록·진행률·사용자 평가 |
+| 시스템 설정 | `SystemSetting` | CSV 저장 경로, 최소 평점 등록 진행률 등 |
+
+### 핵심 설계 특징
+
+**1. 다대다 관계 분리**
+
+하나의 콘텐츠는 여러 장르에 속하거나 여러 OTT 플랫폼에서 제공될 수 있습니다. 이를 `ContentGenre`, `ContentOTTProvider` 중간 테이블로 분리해 중복 데이터와 관계를 관리했습니다.
+
+**2. 데이터 무결성 확보**
+
+기본키(PK), 외래키(FK), UNIQUE·CHECK 제약조건을 활용해 잘못된 참조나 중복 등록, 유효하지 않은 데이터 저장을 방지하도록 설계했습니다.
+
+**3. 시청 기록의 관계 검증**
+
+`WatchHistory`는 사용자와 콘텐츠·OTT 조합을 참조합니다. 시청 시작 시에는 저장 프로시저에서 실제 콘텐츠 제공 여부와 활성 구독 상태를 추가로 확인합니다.
+
+**4. 업무 규칙과 데이터 접근**
+
+구독 등록, 시청 시작·종료, 평점 처리, 콘텐츠 관리 및 통계 조회에 저장 프로시저를 사용했습니다. 주요 조회 조건에 맞춰 인덱스도 구성했습니다.
+
+자세한 데이터베이스 정의와 저장 프로시저는 저장소의 [`First_Query.sql`](First_Query.sql)에서 확인할 수 있습니다.
 
 ## 실행 준비
 
