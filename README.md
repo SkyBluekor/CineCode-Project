@@ -121,43 +121,23 @@ flowchart LR
 
 **관련 구현** — [ContentService.cs](CineCode/CineCode/Services/ContentService.cs) · [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs) · [테이블·저장 프로시저](First_Query.sql)
 
-## 5. 문제 해결 경험
+## 5. 주요 기술 과제와 해결
 
-원래 포트폴리오에서 정리한 실제 개발 경험을 기준으로, **어떤 문제가 있었고 어느 단계에서 해결했는지**를 설명합니다.
+### 01. TMDB API 데이터 통합 — 영화·TV 응답 구조 차이 해결
 
-### 01. TMDB 연결 실패 시 콘텐츠 등록 흐름 중단
+- **과제** — TMDB의 영화와 TV 콘텐츠는 검색 API 경로와 데이터 필드가 서로 달라 동일한 등록 화면에서 처리하기 어렵습니다. 영화는 `title`·`release_date`, TV는 `name`·`first_air_date`를 사용합니다.
+- **구현** — `TmdbService`에서 콘텐츠 유형별 API를 `HttpClient`와 `async/await`로 호출한 후, 응답을 공통 `TmdbSearchResultModel`로 변환했습니다. 러닝타임과 관람 등급도 유형별 상세 API에서 조회합니다.
+- **결과** — 영화와 TV의 데이터 형식 차이를 서비스에서 흡수하여, 콘텐츠 등록 화면에서는 통일된 데이터 모델을 활용하도록 구성했습니다.
 
-- **문제** — TMDB 서버 응답이 없거나 네트워크 오류가 발생할 때 예외가 사용자 화면까지 전달되어 프로그램 흐름이 중단될 수 있었습니다.
-- **해결** — 콘텐츠 등록 화면에서 TMDB 검색·상세 정보 조회의 예외를 처리하고 오류 메시지를 표시했습니다. TMDB 검색이 실패해도 콘텐츠 정보를 직접 입력할 수 있도록 했습니다.
-- **결과** — 외부 API 오류가 전체 콘텐츠 등록 작업의 중단으로 이어지지 않도록 구성했습니다.
+**관련 코드** — [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs) · [ContentAddView.xaml.cs](CineCode/CineCode/Views/ContentManagement/ContentAddView.xaml.cs)
 
-**관련 코드** — [ContentAddView.xaml.cs](CineCode/CineCode/Views/ContentManagement/ContentAddView.xaml.cs) · [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs)
+### 02. SQL 기반 운영 통계 — 저장 데이터를 분석 지표로 가공
 
-### 02. 아동 사용자의 성인 콘텐츠 시청 등록
+- **과제** — 시청 기록·구독·평점이 서로 다른 테이블에 저장되어 있어 목록 조회만으로는 기간별 이용 변화나 플랫폼별 활동을 파악하기 어렵습니다.
+- **구현** — `StatisticsService`에서 SQL `JOIN`, `GROUP BY`, 집계 함수와 저장 프로시저를 사용해 기간별 시청 횟수·시간을 집계하고, 이전 월·분기·연도의 요약 지표와 비교했습니다. OTT별 시청 시간 점유율과 인기 콘텐츠·장르 순위도 조회합니다.
+- **결과** — 원본 운영 데이터를 **기간 비교, 플랫폼 점유율, 인기 콘텐츠 순위** 등 관리자가 파악할 수 있는 지표로 변환해 WPF 통계 화면에 제공합니다.
 
-- **문제** — OTT 구독 여부만 확인하면 연령 제한 콘텐츠도 시청 기록으로 남을 수 있었습니다.
-- **해결** — `Usp_StartWatchHistory`에서 사용자 생년월일(`User_BirthDate`)과 콘텐츠 관람 등급(`Age_Rating`)을 비교하도록 검증을 추가했습니다.
-- **결과** — 관람 연령 조건에 맞지 않는 시청 기록의 등록을 차단했습니다.
-
-**관련 코드** — [First_Query.sql](First_Query.sql)
-
-### 03. 제공하지 않는 OTT로 시청 기록 생성
-
-- **문제** — 콘텐츠와 OTT를 각각 선택하는 구조에서 실제 제공되지 않는 조합으로 시청 기록이 저장될 수 있었습니다.
-- **해결** — `WatchHistory`의 `(Content_ID, Ott_ID)`가 `ContentOTTProvider`의 동일한 조합을 참조하도록 **복합 외래키(FK)**를 설계했습니다. 시청 시작 저장 프로시저에서도 제공 관계를 확인합니다.
-- **결과** — 실제 연결된 콘텐츠·OTT 조합만 시청 기록으로 저장할 수 있도록 했습니다.
-
-**관련 코드** — [First_Query.sql](First_Query.sql)
-
-### 04. 시청률 미달 콘텐츠의 평점 등록
-
-- **문제** — 시청하지 않았거나 충분히 시청하지 않은 콘텐츠에도 평점을 등록하면 평가 데이터의 신뢰성이 떨어집니다.
-- **해결** — `SystemSetting.MIN_RATING_PROGRESS`(기본 **50%**)와 종료된 시청 기록을 바탕으로 `Usp_AddOrUpdateUserRating`에서 평가 자격을 검증했습니다.
-- **결과** — 시청 조건을 만족한 콘텐츠만 평점을 등록·수정할 수 있도록 제한했습니다.
-
-**관련 코드** — [UserRatingService.cs](CineCode/CineCode/Services/UserRatingService.cs) · [First_Query.sql](First_Query.sql)
-
-**화면 개선 경험** — DataGrid에서 글자가 가려지거나 정렬이 어긋나는 문제도 있었으며, 열 너비와 배치 기준을 조정해 화면 가독성을 보완했습니다.
+**관련 코드** — [StatisticsService.cs](CineCode/CineCode/Services/StatisticsService.cs) · [First_Query.sql](First_Query.sql)
 
 ## 6. 실제 프로그램 화면
 
