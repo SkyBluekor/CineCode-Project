@@ -121,33 +121,43 @@ flowchart LR
 
 **관련 구현** — [ContentService.cs](CineCode/CineCode/Services/ContentService.cs) · [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs) · [테이블·저장 프로시저](First_Query.sql)
 
-## 5. 개발 과정의 문제 해결
+## 5. 문제 해결 경험
 
-기능 구현 과정에서 **데이터가 불완전하게 저장되거나, 잘못된 구독이 등록되거나, 서로 다른 외부 API 응답을 처리해야 하는 문제**를 다뤘습니다.
+원래 포트폴리오에서 정리한 실제 개발 경험을 기준으로, **어떤 문제가 있었고 어느 단계에서 해결했는지**를 설명합니다.
 
-### 01. 콘텐츠 등록 중 일부 데이터만 남는 문제
+### 01. TMDB 연결 실패 시 콘텐츠 등록 흐름 중단
 
-- **문제** — 콘텐츠 정보와 장르·OTT 연결은 여러 SQL 작업으로 나뉘므로 중간 작업이 실패하면 불완전한 등록 데이터가 남을 수 있습니다.
-- **해결** — `ContentService.AddContent()`에서 `SqlTransaction`으로 콘텐츠 등록과 연결 작업을 묶었습니다. 전체 성공 시 `Commit`, 오류 발생 시 `Rollback`합니다.
-- **결과** — 등록 과정에서 일부 작업만 성공한 상태를 남기지 않도록 처리했습니다.
+- **문제** — TMDB 서버 응답이 없거나 네트워크 오류가 발생할 때 예외가 사용자 화면까지 전달되어 프로그램 흐름이 중단될 수 있었습니다.
+- **해결** — 콘텐츠 등록 화면에서 TMDB 검색·상세 정보 조회의 예외를 처리하고 오류 메시지를 표시했습니다. TMDB 검색이 실패해도 콘텐츠 정보를 직접 입력할 수 있도록 했습니다.
+- **결과** — 외부 API 오류가 전체 콘텐츠 등록 작업의 중단으로 이어지지 않도록 구성했습니다.
 
-**근거 코드** — [ContentService.cs](CineCode/CineCode/Services/ContentService.cs)
+**관련 코드** — [ContentAddView.xaml.cs](CineCode/CineCode/Views/ContentManagement/ContentAddView.xaml.cs) · [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs)
 
-### 02. 구독 기간 중복과 동시 등록 요청
+### 02. 아동 사용자의 성인 콘텐츠 시청 등록
 
-- **문제** — 기존 구독과 기간이 겹치는 요청이 들어오거나, 두 요청이 동시에 중복 검사를 통과할 위험이 있습니다.
-- **해결** — `Usp_AddUserSubscription`에서 구독 기간의 겹침 여부를 확인하고, 트랜잭션 안에서 `UPDLOCK`·`HOLDLOCK`을 적용했습니다.
-- **결과** — 중복 구독을 차단하고 동시 요청으로 인한 데이터 불일치 위험을 줄이도록 설계했습니다.
+- **문제** — OTT 구독 여부만 확인하면 연령 제한 콘텐츠도 시청 기록으로 남을 수 있었습니다.
+- **해결** — `Usp_StartWatchHistory`에서 사용자 생년월일(`User_BirthDate`)과 콘텐츠 관람 등급(`Age_Rating`)을 비교하도록 검증을 추가했습니다.
+- **결과** — 관람 연령 조건에 맞지 않는 시청 기록의 등록을 차단했습니다.
 
-**근거 코드** — [First_Query.sql](First_Query.sql)
+**관련 코드** — [First_Query.sql](First_Query.sql)
 
-### 03. 영화·TV API 응답 구조 차이
+### 03. 제공하지 않는 OTT로 시청 기록 생성
 
-- **문제** — TMDB 영화는 `title`·`release_date`, TV는 `name`·`first_air_date`를 사용해 동일한 방식으로 화면에 표시하기 어렵습니다.
-- **해결** — `TmdbService`에서 콘텐츠 유형별 검색 경로와 응답 필드를 분기하고 공통 `TmdbSearchResultModel`로 변환했습니다. 러닝타임·관람 등급도 유형에 따라 조회합니다.
-- **결과** — 등록 화면에서 영화와 TV 정보를 공통된 입력 흐름으로 사용할 수 있게 했습니다.
+- **문제** — 콘텐츠와 OTT를 각각 선택하는 구조에서 실제 제공되지 않는 조합으로 시청 기록이 저장될 수 있었습니다.
+- **해결** — `WatchHistory`의 `(Content_ID, Ott_ID)`가 `ContentOTTProvider`의 동일한 조합을 참조하도록 **복합 외래키(FK)**를 설계했습니다. 시청 시작 저장 프로시저에서도 제공 관계를 확인합니다.
+- **결과** — 실제 연결된 콘텐츠·OTT 조합만 시청 기록으로 저장할 수 있도록 했습니다.
 
-**근거 코드** — [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs)
+**관련 코드** — [First_Query.sql](First_Query.sql)
+
+### 04. 시청률 미달 콘텐츠의 평점 등록
+
+- **문제** — 시청하지 않았거나 충분히 시청하지 않은 콘텐츠에도 평점을 등록하면 평가 데이터의 신뢰성이 떨어집니다.
+- **해결** — `SystemSetting.MIN_RATING_PROGRESS`(기본 **50%**)와 종료된 시청 기록을 바탕으로 `Usp_AddOrUpdateUserRating`에서 평가 자격을 검증했습니다.
+- **결과** — 시청 조건을 만족한 콘텐츠만 평점을 등록·수정할 수 있도록 제한했습니다.
+
+**관련 코드** — [UserRatingService.cs](CineCode/CineCode/Services/UserRatingService.cs) · [First_Query.sql](First_Query.sql)
+
+**화면 개선 경험** — DataGrid에서 글자가 가려지거나 정렬이 어긋나는 문제도 있었으며, 열 너비와 배치 기준을 조정해 화면 가독성을 보완했습니다.
 
 ## 6. 실제 프로그램 화면
 
