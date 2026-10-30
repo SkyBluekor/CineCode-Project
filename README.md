@@ -109,13 +109,11 @@ flowchart LR
 
 **구현 특징** — WPF Code-behind와 Service를 사용합니다. 일부 CSV 기능은 화면 코드에서 SQL을 직접 실행하며, 전체를 MVVM 구조로 소개하지 않습니다.
 
-## 4. 데이터베이스 및 기술 설계
+## 4. 데이터베이스 설계
 
-- **관계형 데이터** — 콘텐츠·장르·OTT·사용자·구독·시청·평점·설정을 **10개 테이블**로 관리합니다.
-- **콘텐츠 연결** — `ContentGenre`, `ContentOTTProvider` 중간 테이블로 다대다 관계를 분리했습니다.
-- **트랜잭션** — 콘텐츠·장르·OTT 정보를 `SqlTransaction`으로 함께 저장하거나 취소합니다.
-- **업무 규칙** — PK·FK·UNIQUE·CHECK 제약조건과 저장 프로시저를 사용하며, 구독 등록에는 `UPDLOCK`·`HOLDLOCK`을 적용합니다.
-- **외부 API·분석** — TMDB 영화·TV 응답을 공통 모델로 변환하고, SQL 집계·저장 프로시저로 통계 지표를 생성합니다.
+- **테이블 구성** — 콘텐츠·장르·OTT·사용자·구독·시청·평점·설정을 총 **10개 테이블**로 관리합니다.
+- **관계 설계** — `ContentGenre`, `ContentOTTProvider`로 콘텐츠와 장르·OTT의 다대다 관계를 분리했습니다.
+- **무결성 관리** — PK·FK·UNIQUE·CHECK 제약조건 및 저장 프로시저를 적용했습니다.
 
 <p align="center">
   <a href="CineCode/CineCode/Images/ViewScreenImages/ERD_DIagram.png"><img src="CineCode/CineCode/Images/ViewScreenImages/ERD_DIagram.png" alt="CINECODEDB ERD" width="850"></a>
@@ -123,7 +121,35 @@ flowchart LR
 
 **관련 구현** — [ContentService.cs](CineCode/CineCode/Services/ContentService.cs) · [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs) · [테이블·저장 프로시저](First_Query.sql)
 
-## 5. 실제 프로그램 화면
+## 5. 개발 과정의 문제 해결
+
+기능 구현 과정에서 **데이터가 불완전하게 저장되거나, 잘못된 구독이 등록되거나, 서로 다른 외부 API 응답을 처리해야 하는 문제**를 다뤘습니다.
+
+### 01. 콘텐츠 등록 중 일부 데이터만 남는 문제
+
+- **문제** — 콘텐츠 정보와 장르·OTT 연결은 여러 SQL 작업으로 나뉘므로 중간 작업이 실패하면 불완전한 등록 데이터가 남을 수 있습니다.
+- **해결** — `ContentService.AddContent()`에서 `SqlTransaction`으로 콘텐츠 등록과 연결 작업을 묶었습니다. 전체 성공 시 `Commit`, 오류 발생 시 `Rollback`합니다.
+- **결과** — 등록 과정에서 일부 작업만 성공한 상태를 남기지 않도록 처리했습니다.
+
+**근거 코드** — [ContentService.cs](CineCode/CineCode/Services/ContentService.cs)
+
+### 02. 구독 기간 중복과 동시 등록 요청
+
+- **문제** — 기존 구독과 기간이 겹치는 요청이 들어오거나, 두 요청이 동시에 중복 검사를 통과할 위험이 있습니다.
+- **해결** — `Usp_AddUserSubscription`에서 구독 기간의 겹침 여부를 확인하고, 트랜잭션 안에서 `UPDLOCK`·`HOLDLOCK`을 적용했습니다.
+- **결과** — 중복 구독을 차단하고 동시 요청으로 인한 데이터 불일치 위험을 줄이도록 설계했습니다.
+
+**근거 코드** — [First_Query.sql](First_Query.sql)
+
+### 03. 영화·TV API 응답 구조 차이
+
+- **문제** — TMDB 영화는 `title`·`release_date`, TV는 `name`·`first_air_date`를 사용해 동일한 방식으로 화면에 표시하기 어렵습니다.
+- **해결** — `TmdbService`에서 콘텐츠 유형별 검색 경로와 응답 필드를 분기하고 공통 `TmdbSearchResultModel`로 변환했습니다. 러닝타임·관람 등급도 유형에 따라 조회합니다.
+- **결과** — 등록 화면에서 영화와 TV 정보를 공통된 입력 흐름으로 사용할 수 있게 했습니다.
+
+**근거 코드** — [TmdbService.cs](CineCode/CineCode/Services/TmdbService.cs)
+
+## 6. 실제 프로그램 화면
 
 <table>
   <tr>
@@ -158,7 +184,7 @@ flowchart LR
   </tr>
 </table>
 
-## 6. 실행 및 빌드
+## 7. 실행 및 빌드
 
 **필요 환경** — Windows · .NET 10 SDK · SQL Server · 사전에 구성된 `CINECODEDB` · TMDB API 키
 
