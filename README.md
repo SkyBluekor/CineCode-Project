@@ -270,29 +270,47 @@ SQL의 `JOIN`, `GROUP BY`, 집계 함수와 저장 프로시저를 사용해 여
 
 **관련 SQL:** [First_Query.sql](First_Query.sql)
 
-## 실행 준비
+## 실행 환경 및 준비
 
-1. SQL Server Express를 설치하고 실행합니다.
-2. `CINECODEDB` 데이터베이스를 생성합니다.
-3. 저장소의 SQL 스크립트를 이용해 테이블과 기본 데이터를 준비합니다.
-4. TMDB API 키를 Windows 환경 변수로 등록합니다.
+CineCode는 Windows에서 실행하는 WPF 데스크톱 프로그램이며, 별도의 Microsoft SQL Server 데이터베이스가 필요합니다.
+
+**필요한 환경**
+- Windows 및 .NET 10 SDK
+- Microsoft SQL Server Express 또는 호환 가능한 SQL Server 인스턴스
+- 사전에 구성된 `CINECODEDB` 데이터베이스
+- TMDB API 키
+
+`First_Query.sql`은 데이터베이스 구조와 저장 프로시저를 확인하기 위한 참고 자료입니다. 전체를 그대로 재실행하는 초기화 스크립트는 아닙니다.
+
+공개 저장소에는 DB 백업 파일을 포함하지 않았으므로 실제 실행 시 데이터베이스를 별도로 준비해야 합니다.
+
+### 환경 변수 설정
+
+**Windows PowerShell을 실행한 후**, 아래 명령어를 입력하여 TMDB API 키를 등록합니다.
 
 ```powershell
 setx TMDB_API_KEY "본인의_TMDB_API_KEY"
 ```
 
-기본 DB 서버 후보는 `.\SQLEXPRESS`, `localhost\SQLEXPRESS`, `{컴퓨터이름}\SQLEXPRESS`입니다.  
-다른 SQL Server 인스턴스를 쓰는 경우 아래 환경 변수를 등록할 수 있습니다.
+기본적으로 SQL Server Express 연결 후보를 자동으로 확인합니다.
+
+다른 SQL Server 인스턴스를 사용하는 경우에는 PowerShell에서 다음 명령어를 입력하여 서버 주소를 직접 지정할 수 있습니다.
 
 ```powershell
 setx CINECODE_DB_SERVER "localhost\SQLEXPRESS"
 ```
 
+**주의:** `setx`로 등록한 환경 변수는 새로 실행한 프로그램부터 적용됩니다. 설정이 완료되면 PowerShell과 CineCode를 다시 실행해야 합니다.
+
 ## 빌드
 
+.NET 10 SDK가 설치된 Windows 환경에서 **PowerShell을 실행하고 저장소 최상위 폴더로 이동한 다음**, 아래 명령어를 입력합니다.
+
 ```powershell
-dotnet build .\CineCode\CineCode.slnx
+dotnet build .\CineCode\CineCode\CineCode.csproj
 ```
+
+빌드가 완료되면 SQL Server 연결과 TMDB API 키 설정을 확인한 후 프로그램을 실행할 수 있습니다.
 
 ## 공개 저장소 관리 메모
 
